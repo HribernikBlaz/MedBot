@@ -25,7 +25,7 @@ namespace _MedicalBot
                 string name = Console.ReadLine();
                 if (patient.SetName(name, out errorMessage))
                 {
-                    break; // Break the loop if the input is valid
+                    break;
                 }
                 Console.WriteLine($"Error: {errorMessage}");
                 Console.Write("Enter Patient Name: ");
@@ -46,7 +46,7 @@ namespace _MedicalBot
             do
             {
                 string gender = Console.ReadLine();
-                if (patient.SetGender(gender, out errorMessage))
+                if (patient.SetGender(gender.ToLower(), out errorMessage))
                 {
                     break;
                 }
@@ -71,7 +71,7 @@ namespace _MedicalBot
             do
             {
                 string symptomCode = Console.ReadLine();
-                if (patient.SetSymptomCode(symptomCode, out errorMessage))
+                if (patient.SetSymptomCode(symptomCode.ToLower(), out errorMessage))
                 {
                     break;
                 }
@@ -215,7 +215,7 @@ namespace _MedicalBot
         {
             errorMessage = "";
             bool valid = false;
-            if (gender == "Male" || gender == "Female" || gender == "Other")
+            if (gender == "male" || gender == "female" || gender == "other")
             {
                 _gender = gender;
                 valid = true;
@@ -243,7 +243,7 @@ namespace _MedicalBot
         {
             errorMessage = "";
             bool valid = false;
-            if (symptomCode == "S1" || symptomCode == "S2" || symptomCode == "S3")
+            if (symptomCode == "s1" || symptomCode == "s2" || symptomCode == "s3")
             {
                 _symptomCode = symptomCode;
                 valid = true;
