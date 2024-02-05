@@ -158,8 +158,6 @@ namespace _MedicalBot
     class Patient
     {
         private string symptoms;
-        private bool diabetesHistory;
-
         private string _name;
         private int _age;
         private string _gender;
