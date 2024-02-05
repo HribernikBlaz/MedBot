@@ -17,7 +17,7 @@ namespace _MedicalBot
             MedicalBot medBot = new MedicalBot();
 
             Console.WriteLine("Hi, I'm " + MedicalBot.GetBotName() + ". I'm here to help you with your medication.");
-            Console.WriteLine("Enter your (patient) details: ");
+            Console.WriteLine("-------Enter your (patient) details-------");
 
             Console.Write("Enter Patient Name: ");
             do
@@ -28,6 +28,7 @@ namespace _MedicalBot
                     break;
                 }
                 Console.WriteLine($"Error: {errorMessage}");
+                Console.WriteLine("--------------------");
                 Console.Write("Enter Patient Name: ");
             } while (true);
 
@@ -39,6 +40,7 @@ namespace _MedicalBot
                     break;
                 }
                 Console.WriteLine($"Error: {errorMessage}");
+                Console.WriteLine("--------------------");
                 Console.Write("Enter Patient Age: ");
             } while (true);
 
@@ -51,6 +53,7 @@ namespace _MedicalBot
                     break;
                 }
                 Console.WriteLine($"Error: {errorMessage}");
+                Console.WriteLine("--------------------");
                 Console.Write("Enter Patient Gender: ");
             } while (true);
 
@@ -76,6 +79,7 @@ namespace _MedicalBot
                     break;
                 }
                 Console.WriteLine($"Error: {errorMessage}");
+                Console.WriteLine("--------------------");
                 Console.Write("Enter the symptom code from the above list (S1, S2, or S3): ");
             } while (true);
 
