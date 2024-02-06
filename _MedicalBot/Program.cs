@@ -106,16 +106,17 @@ namespace _MedicalBot
         {
             string medicineName = "";
 
-            if (patient.GetSymptoms().ToLower() == "headache")
-                medicineName = "ibuprofen";
-            else if (patient.GetSymptoms().ToLower() == "skin rashes")
-                medicineName = "diphenhydramine";
-            else if (patient.GetSymptoms().ToLower() == "dizziness")
+            switch (patient.GetSymptoms().ToLower())
             {
-                if (patient.GetMedicalHistory().ToLower() == "diabetes")
-                    medicineName = "metformin";
-                else
-                    medicineName = "dimenhydrinate";
+                case "headache":
+                    medicineName = "ibuprofen";
+                    break;
+                case "skin rashes":
+                    medicineName = "diphenhydramine";
+                    break;
+                case "dizziness":
+                    medicineName = patient.GetMedicalHistory().ToLower() == "diabetes" ? "metformin" : "dimenhydrinate";
+                    break;
             }
 
             string dosage = GetDosage(patient.GetAge(), medicineName);
@@ -126,30 +127,20 @@ namespace _MedicalBot
         {
             string dosage = "";
 
-            if (medicineName == "ibuprofen")
+            switch (medicineName)
             {
-                if (patientAge < 18)
-                    dosage = "400 mg";
-                else
-                    dosage = "800 mg";
-            }
-            else if (medicineName == "diphenhydramine")
-            {
-                if (patientAge < 18)
-                    dosage = "50 mg";
-                else
-                    dosage = "300 mg";
-            }
-            else if (medicineName == "dimenhydrinate")
-            {
-                if (patientAge < 18)
-                    dosage = "50 mg";
-                else
-                    dosage = "400 mg";
-            }
-            else if (medicineName == "metformin")
-            {
-                dosage = "500 mg";
+                case "ibuprofen":
+                    dosage = patientAge < 18 ? "400 mg" : "800 mg";
+                    break;
+                case "diphenhydramine":
+                    dosage = patientAge < 18 ? "50 mg" : "300 mg";
+                    break;
+                case "dimenhydrinate":
+                    dosage = patientAge < 18 ? "50 mg" : "400 mg";
+                    break;
+                case "metformin":
+                    dosage = "500 mg";
+                    break;
             }
             return dosage;
         }
@@ -260,14 +251,17 @@ namespace _MedicalBot
 
         internal string GetSymptoms()
         {
-            if (_symptomCode.ToLower() == "s1")
-                return symptoms = "Headache";
-            else if (_symptomCode.ToLower() == "s2")
-                return symptoms = "Skin rashes";
-            else if (_symptomCode.ToLower() == "s3")
-                return symptoms = "Dizziness";
-            else
-                return symptoms = "Unknown";
+            switch (_symptomCode.ToLower())
+            {
+                case "s1":
+                    return symptoms = "Headache";
+                case "s2":
+                    return symptoms = "Skin rashes";
+                case "s3":
+                    return symptoms = "Dizziness";
+                default:
+                    return symptoms = "Unknown";
+            }
         }
 
 
