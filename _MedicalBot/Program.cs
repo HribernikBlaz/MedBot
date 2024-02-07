@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization.Formatters;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace _MedicalBot
 {
@@ -84,83 +80,76 @@ namespace _MedicalBot
             } while (true);
 
             Console.WriteLine("Your prescription based on your age, symptoms, and medical history:");
-            medBot.PrescribeMedication(patient);
+            Prescription prescription = medBot.PrescribeMedication(patient.GetSymptom(), patient.GetAge());
             Console.Clear();
-            Console.WriteLine("Prescription: " + patient.GetPrescription());
+            Console.WriteLine("Prescription: " + prescription.MedicineName + " " + prescription.Dosage);
             Console.WriteLine("\nThank you for coming.");
 
             Console.ReadKey();
         }
     }
 
+    public enum Symptom
+    {
+        Headache,
+        SkinRashes,
+        Dizziness,
+        Unknown
+    }
+
+    public class Medicine
+    {
+        public string Name { get; set; }
+        public Dictionary<int, string> DosageByAge { get; set; }
+    }
+
+    public class Prescription
+    {
+        public string MedicineName { get; set; }
+        public string Dosage { get; set; }
+    }
+
     class MedicalBot
     {
-        const string BotName = "Bob";
+        private Dictionary<Symptom, Medicine> _medicines;
 
-        internal static string GetBotName()
+        public MedicalBot()
         {
-            return BotName;
+            _medicines = new Dictionary<Symptom, Medicine>
+            {
+                { Symptom.Headache, new Medicine { Name = "Ibuprofen", DosageByAge = new Dictionary<int, string> { { 18, "400 mg" }, { 100, "800 mg" } } } },
+                { Symptom.SkinRashes, new Medicine { Name = "Diphenhydramine", DosageByAge = new Dictionary<int, string> { { 18, "50 mg" }, { 100, "300 mg" } } } },
+                { Symptom.Dizziness, new Medicine { Name = "Dimenhydrinate", DosageByAge = new Dictionary<int, string> { { 18, "50 mg" }, { 100, "400 mg" } } } },
+                { Symptom.Unknown, new Medicine { Name = "Unknown", DosageByAge = new Dictionary<int, string>() } }
+            };
         }
 
-        internal void PrescribeMedication(Patient patient)
+        public Prescription PrescribeMedication(Symptom symptom, int patientAge)
         {
-            string medicineName = "";
-
-            switch (patient.GetSymptoms().ToLower())
-            {
-                case "headache":
-                    medicineName = "ibuprofen";
-                    break;
-                case "skin rashes":
-                    medicineName = "diphenhydramine";
-                    break;
-                case "dizziness":
-                    medicineName = patient.GetMedicalHistory().ToLower() == "diabetes" ? "metformin" : "dimenhydrinate";
-                    break;
-            }
-
-            string dosage = GetDosage(patient.GetAge(), medicineName);
-            patient.SetPrescription($"{medicineName} {dosage}");
+            var medicine = _medicines[symptom];
+            var dosage = medicine.DosageByAge.FirstOrDefault(d => d.Key >= patientAge).Value ?? "Unknown";
+            return new Prescription { MedicineName = medicine.Name, Dosage = dosage };
         }
 
-        string GetDosage(int patientAge, string medicineName)
+        public static string GetBotName()
         {
-            string dosage = "";
-
-            switch (medicineName)
-            {
-                case "ibuprofen":
-                    dosage = patientAge < 18 ? "400 mg" : "800 mg";
-                    break;
-                case "diphenhydramine":
-                    dosage = patientAge < 18 ? "50 mg" : "300 mg";
-                    break;
-                case "dimenhydrinate":
-                    dosage = patientAge < 18 ? "50 mg" : "400 mg";
-                    break;
-                case "metformin":
-                    dosage = "500 mg";
-                    break;
-            }
-            return dosage;
+            return "Bob";
         }
     }
 
     class Patient
     {
-        private string symptoms;
         private string _name;
         private int _age;
         private string _gender;
         private string _medicalHistory;
         private string _symptomCode;
-        private string _prescription;
 
-        internal string GetName()
+        public string GetName()
         {
             return _name;
         }
-        internal bool SetName(string name, out string errorMessage)
+        public bool SetName(string name, out string errorMessage)
         {
             errorMessage = "";
             bool valid = false;
@@ -178,11 +167,11 @@ namespace _MedicalBot
         }
 
 
-        internal int GetAge()
+        public int GetAge()
         {
             return _age;
         }
-        internal bool SetAge(int age, out string errorMessage)
+        public bool SetAge(int age, out string errorMessage)
         {
             errorMessage = "";
             bool valid = false;
@@ -200,11 +189,11 @@ namespace _MedicalBot
         }
 
 
-        internal string GetGender()
+        public string GetGender()
         {
             return _gender;
         }
-        internal bool SetGender(string gender, out string errorMessage)
+        public bool SetGender(string gender, out string errorMessage)
         {
             errorMessage = "";
             bool valid = false;
@@ -222,17 +211,17 @@ namespace _MedicalBot
         }
 
 
-        internal string GetMedicalHistory()
+        public string GetMedicalHistory()
         {
             return _medicalHistory;
         }
-        internal void SetMedicalHistory(string medicalHistory)
+        public void SetMedicalHistory(string medicalHistory)
         {
             _medicalHistory = medicalHistory;
         }
 
 
-        internal bool SetSymptomCode(string symptomCode, out string errorMessage)
+        public bool SetSymptomCode(string symptomCode, out string errorMessage)
         {
             errorMessage = "";
             bool valid = false;
@@ -249,29 +238,19 @@ namespace _MedicalBot
             return valid;
         }
 
-        internal string GetSymptoms()
+        public Symptom GetSymptom()
         {
             switch (_symptomCode.ToLower())
             {
                 case "s1":
-                    return symptoms = "Headache";
+                    return Symptom.Headache;
                 case "s2":
-                    return symptoms = "Skin rashes";
+                    return Symptom.SkinRashes;
                 case "s3":
-                    return symptoms = "Dizziness";
+                    return Symptom.Dizziness;
                 default:
-                    return symptoms = "Unknown";
+                    return Symptom.Unknown;
             }
-        }
-
-
-        internal string GetPrescription()
-        {
-            return _prescription;
-        }
-        internal void SetPrescription(string prescription)
-        {
-            _prescription = prescription;
         }
     }
 }
