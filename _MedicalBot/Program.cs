@@ -28,6 +28,8 @@ namespace _MedicalBot
                 Console.Write("Enter Patient Name: ");
             } while (true);
 
+            Console.WriteLine("Enter Patient Surname: ");
+
             Console.Write("Enter Patient Age: ");
             do
             {
