@@ -24,6 +24,7 @@ namespace _MedicalBot
                     break;
                 }
                 Console.WriteLine($"Error: {errorMessage}");
+
                 Console.WriteLine("--------------------");
                 Console.Write("Enter Patient Name: ");
             } while (true);
