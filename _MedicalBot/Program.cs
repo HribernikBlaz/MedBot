@@ -12,6 +12,7 @@ namespace _MedicalBot
             Patient patient = new Patient();
             MedicalBot medBot = new MedicalBot();
 
+
             Console.WriteLine("Hi, I'm " + MedicalBot.GetBotName() + ". I'm here to help you with your medication.");
             Console.WriteLine("-------Enter your (patient) details-------");
 
